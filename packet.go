@@ -17,6 +17,7 @@ type Option struct {
 type OptionCode byte
 type OpCode byte
 type MessageType byte // Option 53
+type Opt82SubCode byte
 
 // A DHCP packet
 type Packet []byte
@@ -207,14 +208,22 @@ const (
 
 // DHCP Message Type 53
 const (
-	Discover MessageType = 1 // Broadcast Packet From Client - Can I have an IP?
-	Offer    MessageType = 2 // Broadcast From Server - Here's an IP
-	Request  MessageType = 3 // Broadcast From Client - I'll take that IP (Also start for renewals)
-	Decline  MessageType = 4 // Broadcast From Client - Sorry I can't use that IP
-	ACK      MessageType = 5 // From Server, Yes you can have that IP
-	NAK      MessageType = 6 // From Server, No you cannot have that IP
-	Release  MessageType = 7 // From Client, I don't need that IP anymore
-	Inform   MessageType = 8 // From Client, I have this IP and there's nothing you can do about it
+	Null            MessageType = 0  // Something went wrong
+	Discover        MessageType = 1  // Broadcast Packet From Client - Can I have an IP?
+	Offer           MessageType = 2  // Broadcast From Server - Here's an IP
+	Request         MessageType = 3  // Broadcast From Client - I'll take that IP (Also start for renewals)
+	Decline         MessageType = 4  // Broadcast From Client - Sorry I can't use that IP
+	ACK             MessageType = 5  // From Server, Yes you can have that IP
+	NAK             MessageType = 6  // From Server, No you cannot have that IP
+	Release         MessageType = 7  // From Client, I don't need that IP anymore
+	Inform          MessageType = 8  // From Client, I have this IP and there's nothing you can do about it
+	ForceRenew      MessageType = 9  // From Server, force client to start renew process
+	LeaseQuery      MessageType = 10 // RFC4388 DHCP Leasequery
+	LeaseUnassigned MessageType = 11 // RFC4388 DHCP Leasequery
+	LeaseUnknown    MessageType = 12 // RFC4388 DHCP Leasequery
+	LeaseActive     MessageType = 13 // RFC4388 DHCP Leasequery
+	LeaseKnown      MessageType = 14
+	Unimplemented   MessageType = 17
 )
 
 //go:generate stringer -type=OptionCode
@@ -294,7 +303,16 @@ const (
 	OptionStreetTalkServer                           OptionCode = 75
 	OptionStreetTalkDirectoryAssistance              OptionCode = 76
 
-	OptionRelayAgentInformation OptionCode = 82
+	OptionRelayAgentInformation       OptionCode = 82
+	Option82CircuitID                 OptionCode = 1
+	Option82RemoteID                  OptionCode = 2
+	Option82Reserved                  OptionCode = 3
+	Option82DocsisDeviceClass         OptionCode = 4
+	Option82LinkSelection             OptionCode = 5
+	Option82SubscriberID              OptionCode = 6
+	Option82RadiusAttributes          OptionCode = 7
+	Option82Authentication            OptionCode = 8
+	Option82VendorSpecificInformation OptionCode = 9
 
 	// DHCP Extensions
 	OptionRequestedIPAddress     OptionCode = 50
